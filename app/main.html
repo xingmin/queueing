@@ -1,0 +1,53 @@
+﻿<html ng-app="app">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>hybrid</title>
+<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+<script src="bower_components/jquery/dist/jquery.min.js"> </script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"> </script>
+<link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+
+<div class="wrap">
+	<div class="header">
+	
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="#/">Home</a></li>
+			<li><a href="#/register">注册OA帐号</a></li>
+			<li><a href="#">SVN</a></li>
+			
+			  
+			<li class="dropdown">
+				<a class="dropdown-toggle" data-toggle="dropdown">
+				杂项<span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu" role="menu">
+					<li><a href="#/test">test</a></li>
+					<li><a href="#/queuesys/configqueue">队列定义</a></li>
+					<li><a href="#/register">注册OA帐号</a></li>
+				</ul>
+			
+			</li>
+			 
+		</ul>		
+		
+		<div id="content" class="content container" ng-view></div>
+	</div>
+</div>
+<div class="footer">
+	<div class="container">
+		<p>version 1.0</p>
+	</div>
+</div> 
+
+<script src="bower_components/angular/angular.js"> </script>
+<script src="bower_components/angular-route/angular-route.js"> </script>
+<script src="bower_components/angular-md5/angular-md5.min.js"> </script> 
+<script src="scripts/app.js"> </script>
+<script src="scripts/controllers/controller.js"> </script> 
+<script src="scripts/controllers/queuecontroller.js"> </script> 
+<script src="socket.io/socket.io.js"></script>
+
+</body>
+</html>
