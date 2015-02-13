@@ -1,11 +1,11 @@
-﻿<html ng-app="app">
+﻿<html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>hybrid</title>
-<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
-<script src="bower_components/jquery/dist/jquery.min.js"> </script>
-<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"> </script>
+<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+<link rel="stylesheet" href="bower_components/bootstrap-toggle/css/bootstrap2-toggle.css">
 <link rel="stylesheet" href="styles/main.css">
+<script type='text/javascript' src='scripts/lib/require.js' data-main='scripts/main.js'></script>
 </head>
 <body>
 
@@ -24,7 +24,12 @@
 				</a>
 				<ul class="dropdown-menu" role="menu">
 					<li><a href="#/test">test</a></li>
-					<li><a href="#/queuesys/configqueue">队列定义</a></li>
+					<li><a href="#/queuesys/queueclass">队列类别定义</a></li>
+					<li><a href="#/queuesys/queue">队列定义</a></li>
+					<li><a href="#/queuesys/window">呼叫窗口定义</a></li>
+					<li><a href="#/queuesys/user">用户</a></li>
+					<li><a href="#/queuesys/userwindow">用户可登录窗口</a></li>
+					<li><a href="#/queuesys/queue/userqueue">用户可呼叫队列</a></li>
 					<li><a href="#/register">注册OA帐号</a></li>
 				</ul>
 			
@@ -40,14 +45,5 @@
 		<p>version 1.0</p>
 	</div>
 </div> 
-
-<script src="bower_components/angular/angular.js"> </script>
-<script src="bower_components/angular-route/angular-route.js"> </script>
-<script src="bower_components/angular-md5/angular-md5.min.js"> </script> 
-<script src="scripts/app.js"> </script>
-<script src="scripts/controllers/controller.js"> </script> 
-<script src="scripts/controllers/queuecontroller.js"> </script> 
-<script src="socket.io/socket.io.js"></script>
-
 </body>
 </html>

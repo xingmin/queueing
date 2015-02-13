@@ -1,6 +1,6 @@
-'use strict';
-angular.module('app')
-.controller('queue',['$scope','$http','$timeout','queueService','queueClassService',
+define(['./module'],function(controllers,$){
+    'use strict';
+    controllers.controller('queue',['$scope','$http','$timeout','queueService','queueClassService',
                      function($scope,$http,$timeout, queueService,queueClassService){
 	$scope.queues =null;
 	$scope.IsHideModal = true;
@@ -101,4 +101,5 @@ angular.module('app')
 		});
 
 	};
-}]);
+}])
+})

@@ -1,44 +1,98 @@
-"use strict";
-
-angular.module('app', ['ngRoute','angular-md5'])
-.config(
-[
-	'$routeProvider',
-	'$locationProvider',
-	function($routeProvider, $locationProvider){
-		$routeProvider
-			.when('/',{
-						templateUrl:'/views/tpl/welcome.html',
-						controller:'welcomectrl'
-			})
-			.when('/register',{
-				templateUrl:'/views/tpl/register.html',
-				controller:'registerctrl'
-			})
-			.when('/register/success',{
-				templateUrl:'/views/tpl/registersuccess.html'
-			})
-			.when('/test',{
-				templateUrl:'/views/tpl/test.html'
-			})
-			.when('/queuesys/queue',{
-				templateUrl:'/views/tpl/queue.html',
-				controller: 'queue'
-			})
-			.when('/queuesys/queueclass',{
-				templateUrl:'/views/tpl/queueclass.html',
-				controller: 'queueclass'
-			})
-			.when('/queuesys/window',{
-				templateUrl:'/views/tpl/window.html',
-				controller: 'window'
-			})
-			.otherwise({
-				redirectTo:'/'
-			});
-//		$locationProvider.html5Mode(true);//以后再研究2
-	}  
-])
+define(["./appx"],function(app){
+	return app
+//	.run([
+//					'$rootScope',
+//					'$state',
+//					'$stateParams',
+//					function ($rootScope, $state, $stateParams) {
+//					    $rootScope.$state = $state;
+//					    $rootScope.$stateParams = $stateParams
+//					}
+//	                ])
+	               .config([	'$routeProvider',
+								'$locationProvider',
+								function($routeProvider, $locationProvider){
+									$routeProvider
+										.when('/',{
+													templateUrl:'/views/tpl/welcome.html',
+													controller:'welcomectrl'
+										})
+										.when('/register',{
+											templateUrl:'/views/tpl/register.html',
+											controller:'registerctrl'
+										})
+										.when('/register/success',{
+											templateUrl:'/views/tpl/registersuccess.html'
+										})
+										.when('/test',{
+											templateUrl:'/views/tpl/test.html'
+										})
+										.when('/queuesys/queue',{
+											templateUrl:'/views/tpl/queue.html',
+											controller: 'queue'
+										})
+										.when('/queuesys/queueclass',{
+											templateUrl:'/views/tpl/queueclass.html',
+											controller: 'queueclass'
+										})
+										.when('/queuesys/window',{
+											templateUrl:'/views/tpl/window.html',
+											controller: 'windowController'
+										})
+										.when('/queuesys/user',{
+											templateUrl:'/views/tpl/user.html',
+											controller: 'userController'
+										})
+										.when('/queuesys/userwindow',{
+											templateUrl:'/views/tpl/userwindow.html',
+											controller: 'userWindowController'
+										})
+										.when('/queuesys/queue/userqueue',{
+											templateUrl:'/views/tpl/userqueue.html',
+											controller: 'userQueueController'
+										})
+										.otherwise({
+											redirectTo:'/'
+										});
+							//		$locationProvider.html5Mode(true);//以后再研究2
+								}  
+							])
+							})
+//angular.module('appx', ['ngRoute','angular-md5'])
+//.config(
+//[
+//	'$routeProvider',
+//	'$locationProvider',
+//	function($routeProvider, $locationProvider){
+//		$routeProvider
+//			.when('/',{
+//						templateUrl:'/views/tpl/welcome.html',
+//						controller:'welcomectrl'
+//			})
+//			.when('/register',{
+//				templateUrl:'/views/tpl/register.html',
+//				controller:'registerctrl'
+//			})
+//			.when('/register/success',{
+//				templateUrl:'/views/tpl/registersuccess.html'
+//			})
+//			.when('/test',{
+//				templateUrl:'/views/tpl/test.html'
+//			})
+//			.when('/queuesys/queue',{
+//				templateUrl:'/views/tpl/queue.html',
+//				controller: 'queue'
+//			})
+//			.when('/queuesys/queueclass',{
+//				templateUrl:'/views/tpl/queueclass.html',
+//				controller: 'queueclass'
+//			})
+//			.otherwise({
+//				redirectTo:'/'
+//			});
+////		$locationProvider.html5Mode(true);//以后再研究2
+//	}  
+//])
 //.directive("edit",function($document){
 //	  return{
 //	    restrict: 'AE',

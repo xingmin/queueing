@@ -1,6 +1,6 @@
 'use strict';
 angular.module('app')
-.app.controller('welcomectrl',['$scope',function($scope){
+.controller('welcomectrl',['$scope',function($scope){
 		$scope.username = 'test'
 	}])
 .controller('registerctrl',['$scope','$http', '$location', 'md5',

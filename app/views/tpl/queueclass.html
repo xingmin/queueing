@@ -1,25 +1,62 @@
+<form  name="dlgform" class="form-horizontal" ng-submit="saveChange(dlgform.$valid)" role="form" novalidate>
+<editdlg module-name="队列类别" dlgid="editmodal" is-hide="{{isSaveCompleted}}"  >
+	<div class="form-group" >
+		<label  for="queueclassid" class="col-md-3 control-label">队列分类ID</label>
+		<div class="col-md-4" >
+		<span  name="queueclassid" >{{currentedit.newval.id}}</span>
+		</div>
+	</div>	
+	<div class="form-group" >
+		<label  for="queueclassname" class="col-md-3 control-label">队列分类<span class="star">*</span></label>
+		<div class="col-md-4 controls" ng-class="{'has-error': (submitInvalid && dlgform.queueclassname.$invalid) || (dlgform.queueclassname.$invalid && !dlgform.queueclassname.$pristine)}">
+		<input type="text" class="form-control" id="queueclassname"  name="queueclassname" ng-model="currentedit.newval.name" required placeholder="请输入队列类别"/>
+		<p ng-show="( dlgform.queueclassname.$invalid) || (dlgform.queueclassname.$invalid && !dlgform.queueclassname.$pristine)" class="help-block">队列类别必填。</p>
+		</div>
+	</div>
+</editdlg>
+</form>
 
-<link rel="stylesheet" href="styles/configqueue.css">
-<div class="title control-group">
-	<label>队列列表</label>
+<div class="title control-group">	
+	<button type="button" data-target="#editmodal" data-toggle="modal"  class="btn btn-primary pull-right" ng-click="changeEditMode('create')">新建</button>
+	<h3>队列类别</h3>
 </div>
+<msgbox messages="msgs"></msgbox>
 <table class="table table-bordered table-hover">
 	<tr>
-		<th>队列名称</th>
-		<th>最大呼叫次数/人</th>
+		<th>队列分类ID</th>
+		<th>队列分类名称</th>
     	<th></th>
     </tr>
-    <tr ng-repeat="queue in queues">
-    	<td>
-    		<input type="text" id='txt_name_{{queue.id}}' ng-model="queue.name" class="inactive " readonly />
-        </td>
-        <td> <input type="text" id='txt_maxcalltimes_{{queue.id}}'  ng-model="queue.maxcalltimes" class="inactive" readonly /></td>
+    <tr ng-repeat="queueclass in queueclasses">
         <td>
-        	<edit ng-Model="queue" ng-show="showEdit"><a>编辑</a></edit>
-            <update ng-Model="queue" ng-show="!showEdit"><a>保存</a></update> 
-            <cancel ng-Model="queue" ng-show="!showEdit"> | <a>取消</a></cancel>
-          | <delete ng-Model="queue"><a>删除</a></delete>
+    		{{queueclass.id}}
+        </td>
+    	<td>
+    		{{queueclass.name}}
+        </td>
+        <td>
+        	<edit ng-Model="queueclass"  edit-data="currentedit" ng-click="changeEditMode('edit')"><a data-target="#editmodal" data-toggle="modal"  href="javascript:void(0);">编辑</a></edit>
+          | <delete ng-Model="queueclass" del-data="currentedit" ng-click="changeEditMode('del')"><a data-target="#delmodal" data-toggle="modal" href="javascript:void(0);">删除</a ></delete>
 		</td>
 	</tr>
 </table>
+<deletedlg dlgid="delmodal" is-hide="{{IsHideModal}}" do-del="deletecur()">
+	<table class="table table-bordered table-hover">
+	    <tr>
+		    <td>ID</td>
+		     <td>
+		 		{{currentedit.newval.id}}
+		     </td>
+	    </tr>
+	    <tr>
+		    <td>名称</td>
+		 	<td>
+		 		{{currentedit.newval.name}}
+		     </td>
+	    </tr>
+	</table>
+</deletedlg>
+
+
+
 

@@ -11,6 +11,7 @@ var users = require('./routes/users');
 var patient = require('./routes/patient');
 var depts = require('./routes/depts');
 var queueclass = require('./routes/queue/queueclass');
+var queue = require('./routes/queue/queue');
 
 var app = express();
 
@@ -32,6 +33,9 @@ app.use('/users', users);
 app.use('/patient', patient);
 app.use('/depts', depts);
 app.use('/queue/queueclass', queueclass);
+app.use('/queue/queue', queue);
+app.use('/queue/window', require('./routes/queue/window'));
+app.use('/queue/user', require('./routes/queue/user'));
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -64,5 +68,12 @@ app.use(function(err, req, res, next) {
     });
 });
 
+
+app.use(function noCache(req, res, next){
+	res.header("Cache-Control","no-cache, no-store, must-revalidate");	
+	res.header("Pragma","no-cache");
+	res.header("Expires",0);
+	next();
+});
 
 module.exports = app;

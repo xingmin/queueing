@@ -1,45 +1,51 @@
 var express = require('express');
 var router = express.Router();
-var QueueClass = require("../../models/queue/queueclass.js");
+var Queue = require("../../models/queue/queue.js");
 var Q = require('q');
 var ResData = require("../resdata.js");
 
 
 router.post('/create', function(req, res) {	
-	var name = req.body.classname;	
-	var queueclass = new QueueClass(name);
-	queueclass.createNewQueueClass()
+	var name = req.body.name;
+	var maxCallTimes = req.body.maxCallTimes;	
+	var queueClassId = req.body.queueClassId;
+	var isActive = req.body.isActive;
+	var queue = new Queue(null,name, maxCallTimes,queueClassId, isActive);
+	queue.createNewQueue()
 		.then(function(status){
 			var resdata;		
 			if(status instanceof Error){
 				resdata = new ResData(1, status.message);
 			}else{
-				resdata = new ResData(0, '', queueclass);
+				resdata = new ResData(0, '', queue);
 			}
 			resdata.sendJson(res);	
 		});
 });
 
 router.post('/update', function(req, res) {	
-	var name = req.body.classname;	
-	var id = req.body.classid;	 
-	var queueclass = new QueueClass(name, id);
-	queueclass.updateQueueClass()
+	var id = req.body.id;
+	var name = req.body.name;
+	var maxCallTimes = req.body.maxCallTimes;	
+	var queueClassId = req.body.queueClassId;
+	var isActive = req.body.isActive;
+	var queue = new Queue(id, name, maxCallTimes, queueClassId, isActive);
+	queue.updateQueue()
 		.then(function(status){
 			var resdata;		
 			if(status instanceof Error){
 				resdata = new ResData(status, status.message);
 			}else{
-				resdata = new ResData(0, '', queueclass);
+				resdata = new ResData(0, '', queue);
 			}
 			resdata.sendJson(res);	
 		});
 });
 
 router.post('/delete', function(req, res) {	
-	var id = req.body.classid;	 
-	var queueclass = new QueueClass('', id);
-	queueclass.deleteQueueClass()
+	var id = req.body.id;	 
+	var queue = new Queue(id, '');
+	queue.deleteQueue()
 		.then(function(status){
 			var resdata;		
 			if(status instanceof Error){
@@ -51,7 +57,7 @@ router.post('/delete', function(req, res) {
 		});
 });
 router.get('/', function(req, res) {	
-	QueueClass.prototype.getAllQueueClass()
+	Queue.prototype.getAllQueues()
 		.then(function(data){
 			var resdata;		
 			if(data instanceof Error){
@@ -61,11 +67,26 @@ router.get('/', function(req, res) {
 			}
 			resdata.sendJson(res);	
 		});
-});2
+});
 
-router.get('/get/py/:py', function(req, res) {	
-	var pinyin = req.param('py');
-	QueueClass.prototype.getQueueClassByPinyin(pinyin)
+router.get('/userqueue/:userid', function(req, res) {	
+	var userid = req.param('userid');
+	Queue.getUserAvilableQueue(userid)
+		.then(function(data){
+			var resdata;		
+			if(data instanceof Error){
+				resdata = new ResData(data.status, data.message);
+			}else{
+				resdata = new ResData(0,'',data);
+			}
+			resdata.sendJson(res);	
+		});
+});
+router.post('/userqueue/update', function(req, res) {	
+	var userid = req.body.userid;	
+	var arrQueue = req.body.queueid;	
+	
+	Queue.saveUserAvilableQueues(userid,  arrQueue)
 		.then(function(data){
 			var resdata;		
 			if(data instanceof Error){
