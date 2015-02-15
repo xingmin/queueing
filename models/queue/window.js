@@ -1,9 +1,10 @@
 var sql = require('mssql'); 
 var customdefer = require('../customdefer');
 
-function Window(id,name){
+function Window(id,name, isactive){
     this.id = id;
     this.name = name;
+    this.isactive = isactive;
 };
 
 //Window.prototype.getQueueClassByPinyin = function(py){
@@ -52,6 +53,7 @@ Window.prototype.createNewWindow = function(){
 	});
 	return promise;
 };
+
 Window.prototype.updateWindow = function(){
 	var config = require('../connconfig').queue;
 	
@@ -94,6 +96,7 @@ Window.prototype.deleteWindow = function(){
 	});
 	return promise;
 };
+
 Window.getAllWindows = function(){
 	var config = require('../connconfig').queue;
 	
@@ -139,6 +142,29 @@ Window.getUserAvilableWindow = function(userid){
 	});
 	return promise;
 };
+Window.getUserAvilableWindowDetail = function(userid){
+	var config = require('../connconfig').queue;
+	
+	var conn = new sql.Connection(config);
+
+	var promise = customdefer.conn_defered(conn).then(function(conn){
+		var request = new sql.Request(conn);	
+		request.input('userid', sql.Int, userid);	
+		return customdefer.request_defered(request, 'proc_getUserAvilableWindowDetail');
+	}).then(function(data){
+		var arrWindow = [];
+		data.recordset[0].forEach(function(value){
+			arrWindow.push(new Window( value.WindowId, value.WindowName,(value.IsActive==1?true:false)));
+		});
+		return arrWindow;
+	},function(err){
+		if (err) {
+			console.log("executing proc_getUserAvilableWindow Error: " + err.message);
+			return err;
+		}
+	});
+	return promise;
+};
 Window.saveUserAvilableWindows = function(userid,arrWindowId){
 	var config = require('../connconfig').queue;
 	
@@ -163,6 +189,29 @@ Window.saveUserAvilableWindows = function(userid,arrWindowId){
 	});
 	return promise;
 };
+Window.prototype.activeWindowOfUser = function(userid){
+	var config = require('../connconfig').queue;
+	
+	var conn = new sql.Connection(config);
+	var that = this;
 
+	var promise = customdefer.conn_defered(conn).then(function(conn){
+		var request = new sql.Request(conn);	
+		request.input('UserId', sql.Int, userid);	
+		request.input('WindowId', sql.Int, that.id);
+		return customdefer.request_defered(request, 'proc_setUserActiveWindow');
+	}).then(function(data){
+		if(data.ret != 0){
+			console.log("executing proc_setUserActiveWindow Error: " + data.recordset[0].errmsg);
+		}
+		return {status:data.ret};
+	},function(err){
+		if (err) {
+			console.log("executing proc_setUserActiveWindow Error: " + err.message);
+			return err;
+		}
+	});
+	return promise;
+};
 
 module.exports = Window;

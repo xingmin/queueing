@@ -21,7 +21,13 @@ define(['./module'],function(services,$){
 				  'pwd':password,
 				  'empcode':empcode}); 
 			  }
-		  };
+		  ,
+		  getUserInfoByPwd:function(loginid, password){
+			  return $http.post('/queue/user/querybypwd/', {
+				  'loginid':loginid,
+				  'pwd':password}); 
+		 }
+	};
 	}])
 })
 

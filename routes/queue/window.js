@@ -75,6 +75,19 @@ router.get('/userwindow/:userid', function(req, res) {
 			resdata.sendJson(res);	
 		});
 });
+router.get('/userwindow/getdetail/:userid', function(req, res) {	
+	var userid = req.param('userid');
+	Window.getUserAvilableWindowDetail(userid)
+		.then(function(data){
+			var resdata;		
+			if(data instanceof Error){
+				resdata = new ResData(data.status, data.message);
+			}else{
+				resdata = new ResData(0,'',data);
+			}
+			resdata.sendJson(res);	
+		});
+});
 router.post('/userwindow/update', function(req, res) {	
 	var userid = req.body.userid;	
 	var arrWindow = req.body.windowid;	
@@ -91,6 +104,20 @@ router.post('/userwindow/update', function(req, res) {
 		});
 });
 
-
+router.post('/userwindow/active', function(req, res) {	
+	var userid = req.body.userid;	
+	var windowid = req.body.windowid;
+	var window = new Window(windowid,null);
+	window.activeWindowOfUser(userid)
+		.then(function(data){
+			var resdata;		
+			if(data instanceof Error){
+				resdata = new ResData(data.status, data.message);
+			}else{
+				resdata = new ResData(0,'',data);
+			}
+			resdata.sendJson(res);	
+		});
+});
 
 module.exports = router;

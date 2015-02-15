@@ -17,9 +17,15 @@ define(['./module'],function(services,$){
 		  getUserAvilableWindow:function(userid){
 			  return $http.get('/queue/window/userwindow/'+userid);
 		  },
+		  getUserAvilableWindowDetail:function(userid){
+			  return $http.get('/queue/window/userwindow/getdetail/'+userid);
+		  },
 		  saveUserAvilableWindows:function(userid,arrWindows){
 			  return $http.post('/queue/window/userwindow/update/', {'userid':userid, 'windowid':arrWindows});
-		  }
+		  },
+		  activeUserWindow:function(userid,windowid){
+			  return $http.post('/queue/window/userwindow/active/', {'userid':userid, 'windowid':windowid});
+		  },
 	}
 	}])
 })

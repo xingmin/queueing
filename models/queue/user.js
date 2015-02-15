@@ -129,4 +129,42 @@ User.getAllUsers = function(){
 	});
 	return promise;
 };
+User.prototype.getUserInfoByPwd = function(userloginid, userpwd){
+	var loginid,pwd,that;
+	if (userloginid && userpwd){
+		loginid = userloginid;
+		pwd = userpwd;
+	}else{
+		loginid = this.loginid;
+		pwd = this.pwd;
+		that = this;
+	}
+	var config = require('../connconfig').queue;
+	
+	var conn = new sql.Connection(config);
+
+	var promise = customdefer.conn_defered(conn).then(function(conn){
+		var request = new sql.Request(conn);	
+		request.input('LoginId', sql.VarChar(50), loginid);	
+		request.input('Pwd', sql.VarChar(50), pwd);	
+		return customdefer.request_defered(request, 'proc_getUserInfoByPwd');
+	}).then(function(data){	
+		if(that){
+			that.id = data.recordset[0][0].Id;
+			that.name = data.recordset[0][0].Name;
+			that.empcode = data.recordset[0][0].EmpCode;
+		}
+ 		return that? that: new User(data.recordset[0].Id, 
+				data.recordset[0][0].Name,
+				data.recordset[0][0].LoginId,
+				data.recordset[0][0].Pwd,
+				data.recordset[0][0].EmpCode);
+	},function(err){
+		if (err) {
+			console.log("executing proc_getUserInfoByPwd Error: " + err.message);
+			return err;
+		}
+	});
+	return promise;
+};
 module.exports = User;

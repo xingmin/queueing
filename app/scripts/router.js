@@ -43,9 +43,17 @@ define(["./appx"],function(app){
 											templateUrl:'/views/tpl/user.html',
 											controller: 'userController'
 										})
+										.when('/queuesys/user/login',{
+											templateUrl:'/views/tpl/login.html',
+											controller: 'userLoginController'
+										})
 										.when('/queuesys/userwindow',{
 											templateUrl:'/views/tpl/userwindow.html',
 											controller: 'userWindowController'
+										})
+										.when('/queuesys/user/choosewindow',{
+											templateUrl:'/views/tpl/choosewindow.html',
+											controller: 'chooseWindowController'
 										})
 										.when('/queuesys/queue/userqueue',{
 											templateUrl:'/views/tpl/userqueue.html',
