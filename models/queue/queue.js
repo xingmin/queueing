@@ -157,6 +157,34 @@ Queue.saveUserAvilableQueues = function(userid,arrQueueId){
 	return promise;
 };
 
+Queue.getQueueByClassId = function(classid){
+	var config = require('../connconfig').queue;
+	
+	var conn = new sql.Connection(config);
+
+	var promise = customdefer.conn_defered(conn).then(function(conn){
+		var request = new sql.Request(conn);	
+		request.input('ClassId', sql.Int, classid);	
+		return customdefer.request_defered(request, 'proc_getQueueInfoByClassId');
+	}).then(function(data){
+		var arrQueue = [];
+		data.recordset[0].forEach(function(value){
+			arrQueue.push((new Queue( value.QueueId,
+					value.QueueName,
+					value.MaxCallTimes,
+					value.QueueClassId,
+					value.QueueClassName,
+					value.IsActive)));
+		});
+		return arrQueue;
+	},function(err){
+		if (err) {
+			console.log("executing proc_getQueueInfoByClassId Error: " + err.message);
+			return err;
+		}
+	});
+	return promise;
+};
 
 
 

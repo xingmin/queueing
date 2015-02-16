@@ -1,0 +1,62 @@
+<link rel="stylesheet" href="styles/common.css">
+<div class="title control-group">	
+	<h3>自助取号</h3>
+</div>
+<msgbox messages="msgs"></msgbox>
+ 
+<div class="row">
+	<div class="col-md-6">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3>当前开放队列</h3>
+		</div>
+		<table class="table table-bordered table-hover">
+			<tr>
+				<th>队列ID</th>
+				<th>队列名称</th>
+		    </tr>
+		    <tr ng-repeat="queue in queues" ng-click="selectQueue(queue)">
+		        <td>
+		    		{{queue.id}}
+		        </td>
+		    	<td>
+		    		{{queue.name}}
+		        </td>
+			</tr>
+		</table>
+	</div>
+	</div>
+	<div class="col-md-6">
+	<div class="panel panel-default ">
+		<div class="panel-heading">
+		
+			<h3>取号区</h3>
+		</div>
+			<table class="table table-bordered table-hover">
+			<tr>
+				<th>队列ID</th>
+				<th>队列名称</th>
+		  
+		    </tr>
+		    <tr>
+		        <td>
+		    		{{selectedQueue.id}}
+		        </td>
+		    	<td>
+		    		{{selectedQueue.name}}
+		        </td>
+		   
+			</tr>
+		</table>
+			<div>
+			<button type="button"   class="btn btn-primary pull-right" ng-click="">取号</button>
+			</div>
+	
+	</div>
+	</div>
+</div>
+ 
+
+
+
+

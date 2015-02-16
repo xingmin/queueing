@@ -1,4 +1,5 @@
 define(['./queueservicex',
         './queueclassservicex',
         './windowservice',
-        './userservice'],function(){});
+        './userservice',
+        './socketservice'],function(){});

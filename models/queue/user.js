@@ -148,7 +148,9 @@ User.prototype.getUserInfoByPwd = function(userloginid, userpwd){
 		request.input('LoginId', sql.VarChar(50), loginid);	
 		request.input('Pwd', sql.VarChar(50), pwd);	
 		return customdefer.request_defered(request, 'proc_getUserInfoByPwd');
-	}).then(function(data){	
+	}).then(function(data){
+		if(data.recordset[0].length<=0)
+			return null;
 		if(that){
 			that.id = data.recordset[0][0].Id;
 			that.name = data.recordset[0][0].Name;

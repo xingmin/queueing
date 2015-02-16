@@ -1,11 +1,16 @@
 define(['./module'],function(controllers,$){
     'use strict';
-    controllers.controller('chooseWindowController',['$scope','$http','$timeout','windowService',function($scope,$http,$timeout, windowService){
+    controllers.controller('chooseWindowController',['$scope','$http','$timeout','windowService','userService',function($scope,$http,$timeout, windowService, userService){
     	$scope.callWindows =null;
     	$scope.currentWindow = null;
     	$scope.msgs=[];
-    	windowService.getUserAvilableWindowDetail(2).success(function(data){
+    	windowService.getUserAvilableWindowDetail(userService.getCurrentUser().id).success(function(data){
     		$scope.callWindows = data.value;
+    		$scope.callWindows.forEach(function(win){
+    			if(win.isactive){
+    				$scope.currentWindow = win;
+    			}
+    		});
     	});
     	$scope.activeWindow = function(current){
     		$scope.callWindows.forEach(function(win){
@@ -17,7 +22,7 @@ define(['./module'],function(controllers,$){
     		});
     	}
     	$scope.saveActiveWindow = function(){    	 
-			windowService.activeUserWindow(2, $scope.currentWindow.id)
+			windowService.activeUserWindow(userService.getCurrentUser().id, $scope.currentWindow.id)
 				.success(function(data){
 					if(data.status==0){ 
 						$scope.msgs.push('保存设置成功！');

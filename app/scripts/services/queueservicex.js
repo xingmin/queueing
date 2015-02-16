@@ -27,7 +27,11 @@ define(['./module'],function(services,$){
 		  saveUserAvilableQueues:function(userid,arrQueues){
 			  return $http.post('/queue/queue/userqueue/update/', {'userid':userid, 'queueid':arrQueues});
 		  }
-		  };
+		  ,
+		  getQueueInfoByClassId:function(classid){
+			  return $http.get('/queue/queue/querybyclassid/'+classid);
+		  }
+	};
 	}])
 })
 

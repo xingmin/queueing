@@ -8,6 +8,7 @@ require.config({
 		'angular-bootstrap':'../bower_components/angular-bootstrap/ui-bootstrap',
 		'bootstrap':'../bower_components/bootstrap/dist/js/bootstrap',
 		'bootstrap-toggle':'../bower_components/bootstrap-toggle/js/bootstrap2-toggle',
+		'socketio':'/socket.io/socket.io',
 		'domReady':'lib/domReady',
 		'boot':'boot',
 		'appx':'appx',
@@ -36,7 +37,7 @@ require.config({
 		'angular-bootstrap':{
 			deps:['angular'],
 			exports:'angular-bootstrap'	
-		}
+		},
 	},
 	deps:['boot']
 });

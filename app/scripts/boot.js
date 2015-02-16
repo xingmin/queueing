@@ -4,6 +4,7 @@ define(['require',
         'bootstrap',
         'angular-route',
         'angular-bootstrap', 
+        
         'appx',
         'router'
         //,
@@ -15,7 +16,7 @@ define(['require',
 	require(['domReady!'],function(document){
 		angular.bootstrap(document,['webapp']);
 		//require(['bootstrap-toggle'],function(){})
-		
+	
 		
 	});
 });

@@ -97,4 +97,18 @@ router.post('/userqueue/update', function(req, res) {
 			resdata.sendJson(res);	
 		});
 });
+
+router.get('/querybyclassid/:classid', function(req, res) {	
+	var classid = req.param('classid');
+	Queue.getQueueByClassId(classid)
+		.then(function(data){
+			var resdata;		
+			if(data instanceof Error){
+				resdata = new ResData(data.status, data.message);
+			}else{
+				resdata = new ResData(0,'',data);
+			}
+			resdata.sendJson(res);	
+		});
+});
 module.exports = router;
