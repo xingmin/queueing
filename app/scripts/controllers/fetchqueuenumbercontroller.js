@@ -1,8 +1,16 @@
-define(['./module'],function(controllers,$){
+define(['./module'],function(controllers){
     'use strict';
     controllers.controller('fetchQueueNumberController',
-    		['$scope','$http','$timeout','socketService','queueService',
-    		function($scope,$http,$timeout, socketService,queueService){
+    		['$scope','$http','$timeout','socketService','queueService','queueClassService',
+    		function($scope,$http,$timeout, socketService,queueService,queueClassService){
+    	$scope.config={queueClasses:null,
+    			currentQueueClass:null,
+    			changeCurrent:function(queueclass){
+    				$scope.config.currentQueueClass = queueclass;
+    	}};
+    	queueClassService.getAllQueueClasses().success(function(data){
+    		$scope.config.queueClasses = data.value;
+    	});
     	$scope.msgs=[];
     	$scope.queues=null;
     	$scope.selectedQueue = null

@@ -8,6 +8,7 @@ require.config({
 		'angular-bootstrap':'../bower_components/angular-bootstrap/ui-bootstrap',
 		'bootstrap':'../bower_components/bootstrap/dist/js/bootstrap',
 		'bootstrap-toggle':'../bower_components/bootstrap-toggle/js/bootstrap2-toggle',
+		//'modal-carousel':'../bower_components/bootstrap-modal-carousel/dist/js/bootstrap-modal-carousel',
 		'socketio':'/socket.io/socket.io',
 		'domReady':'lib/domReady',
 		'boot':'boot',
