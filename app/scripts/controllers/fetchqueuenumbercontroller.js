@@ -1,12 +1,21 @@
 define(['./module'],function(controllers){
     'use strict';
     controllers.controller('fetchQueueNumberController',
-    		['$scope','$http','$timeout','socketService','queueService','queueClassService',
-    		function($scope,$http,$timeout, socketService,queueService,queueClassService){
+    		['$scope','$http','$timeout','socketService','queueService','queueClassService','indexedDbService',
+    		function($scope,$http,$timeout, socketService,queueService,queueClassService,indexedDbService){
     	$scope.config={queueClasses:null,
     			currentQueueClass:null,
     			changeCurrent:function(queueclass){
-    				$scope.config.currentQueueClass = queueclass;
+    				$scope.config.currentQueueClass = queueclass;    			 
+    				indexedDbService.setAppConfig('current-queue-class',{id:$scope.config.currentQueueClass.id,
+    																		name:$scope.config.currentQueueClass.name})
+    					.then(
+    							function(){
+    								console.log('ok')
+    							},
+    							function(){console.log('failed!')}
+    						);    					 
+    				 
     	}};
     	queueClassService.getAllQueueClasses().success(function(data){
     		$scope.config.queueClasses = data.value;
