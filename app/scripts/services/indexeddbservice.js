@@ -35,12 +35,13 @@ define(['./module'],function(services){
 			return deferred.promise;
 		};
 		
-		var _getAppConfig =function(name) {
+		var _getAppConfig =function(name,resultIsArrary) {
 			var deferred = $q.defer();		    
 		    _init().then(
 		    	function(db) {
 			    	try{
-				    	var result = [];
+				    	var result ;
+				    	resultIsArrary?(result = []):(result = null);				 
 						var transaction = db.transaction(["config"], "readonly");  
 						var objectStore = transaction.objectStore("config");
 						var index = objectStore.index("name");
@@ -48,7 +49,11 @@ define(['./module'],function(services){
 						cursorRequest.onsuccess = function(e) {  
 				    		var cursor = e.target.result;
 				    		if (cursor) {
-				    			result.push({key:cursor.key, val:cursor.value});
+						    	if(resultIsArrary){
+						    		result.push(cursor.value.value);
+						    	}else{
+						    		result = cursor.value.value;
+						    	}				    			
 				    			cursor.continue();
 				    		}
 				    	};
