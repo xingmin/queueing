@@ -15,8 +15,15 @@ module.exports = {
 	},
 	"queue":{
 		user: 'sa',
-		password: '123456',
-		server: '172.30.115.30', // You can use 'localhost\\instance' to connect to named instance
+		password: 'system',
+		server: '127.0.0.1', // You can use 'localhost\\instance' to connect to named instance
+		database: 'test',
+//		driver:'tds'
+	},
+	"queueexternal":{
+		user: 'sa',
+		password: 'system',
+		server: '127.0.0.1', // You can use 'localhost\\instance' to connect to named instance
 		database: 'test',
 //		driver:'tds'
 	}

@@ -4,6 +4,7 @@ define(['./module'],function(controllers){
     		['$scope','$http','$timeout','socketService','queueService','queueClassService','indexedDbService',
     		function($scope,$http,$timeout, socketService,queueService,queueClassService,indexedDbService){
     	$scope.msgs=[];
+    	$scope.personIdExternal=null;
     	$scope.queues=null;
     	$scope.selectedQueue = null;
     	$scope.getQueuesByCurrentClassId = function(){
@@ -23,7 +24,7 @@ define(['./module'],function(controllers){
     																		name:$scope.config.currentQueueClass.name})
     					.then(
     							function(){
-    								console.log('保存配置成功！')
+    								console.log('save configuration succeeded！')
     								$scope.getQueuesByCurrentClassId();
     							},
     							function(){console.log('failed!')}
@@ -48,8 +49,11 @@ define(['./module'],function(controllers){
 
     	$scope.selectQueue = function(queue){
     		$scope.selectedQueue = queue;
+    	}      	
+    	$scope.fetchQueueNumber = function(queueid){
+    		
     	}    	
-
+    	
     	socketService.emit('myownevent','dd',function(){
     		$scope.msgs.push('test')
     	});
