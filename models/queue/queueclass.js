@@ -26,9 +26,10 @@ var request_defered = function(reqest, proc){
 	return defered.promise;
 };
 
-function QueueClass(name, id){
+function QueueClass(id, name, mode){
     this.id = id;
     this.name = name;
+    this.mode = mode;
 };
 QueueClass.prototype.getAllQueueClass = function(){
 	var config = require('../connconfig').queue;
@@ -41,7 +42,7 @@ QueueClass.prototype.getAllQueueClass = function(){
 	}).then(function(data){
 		var arrQueueClass = [];
 		data.recordset[0].forEach(function(value){
-			arrQueueClass.push((new QueueClass(value.Name, value.Id)));
+			arrQueueClass.push((new QueueClass(value.Id, value.Name, value.Mode)));
 		});
 		return arrQueueClass;
 	},function(err){
@@ -64,7 +65,7 @@ QueueClass.prototype.getQueueClassByPinyin = function(py){
 	}).then(function(data){
 		var arrQueueClass = [];
 		data.recordset[0].forEach(function(value){
-			arrQueueClass.push((new QueueClass(value.Name, value.Id)));
+			arrQueueClass.push((new QueueClass(value.Id, value.Name, value.Mode)));
 		});
 		return arrQueueClass;
 	},function(err){
@@ -85,7 +86,8 @@ QueueClass.prototype.createNewQueueClass = function(){
 	
 	var promise = conn_defered(conn).then(function(conn){
 		var request = new sql.Request(conn);
-		request.input('name', sql.NVarChar(50), that.name);		
+		request.input('name', sql.NVarChar(50), that.name);	
+		request.input('mode', sql.Int, that.mode);	
 		return request_defered(request, 'proc_addQueueClass');
 	}).then(function(data){
 		that.id = data.recordset[0][0].ClassId;
@@ -108,6 +110,7 @@ QueueClass.prototype.updateQueueClass = function(){
 		var request = new sql.Request(conn);
 		request.input('id', sql.Int, that.id);	
 		request.input('name', sql.NVarChar(50), that.name);		
+		request.input('mode', sql.Int, that.mode);
 		return request_defered(request, 'proc_updateQueueClass');
 	}).then(function(data){
 		return {status:data.ret};

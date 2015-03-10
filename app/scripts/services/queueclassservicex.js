@@ -11,11 +11,11 @@ define(['./module'],function(services,$){
 			  delQueueClass:function(id){
 				  return $http.post('/queue/queueclass/delete/', {'classid':id});
 			  },
-			  createNewQueueClass:function(name){
-				  return $http.post('/queue/queueclass/create/', {'classname':name});
+			  createNewQueueClass:function(name, mode){
+				  return $http.post('/queue/queueclass/create/', {'classname':name, 'classmode':mode});
 			  },
-			  saveChangeQueueClass:function(id,name){
-				  return $http.post('/queue/queueclass/update/', {'classname':name, 'classid':id}); 
+			  saveChangeQueueClass:function(id, name, mode){
+				  return $http.post('/queue/queueclass/update/', {'classname':name, 'classid':id, 'classmode':mode}); 
 			  }
 		  };
 	}])

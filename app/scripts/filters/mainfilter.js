@@ -1,0 +1,2 @@
+define(['filters/translatemode',
+        ],function(){});

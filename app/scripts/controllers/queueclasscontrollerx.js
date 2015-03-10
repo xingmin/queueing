@@ -13,15 +13,19 @@ define(['./module'],function(controllers,$){
     	$scope.saveChange = function(){
     		$scope.isSaveCompleted = false;
     		if ($scope.mode == 'edit'){
-    			queueClassService.saveChangeQueueClass($scope.currentedit.newval.id,$scope.currentedit.newval.name)
+    			queueClassService.saveChangeQueueClass($scope.currentedit.newval.id,
+    					$scope.currentedit.newval.name,
+    					$scope.currentedit.newval.mode)
     				.success(function(data){
     					if(data.status==0){
     						$scope.currentedit.oldval.name = $scope.currentedit.newval.name;
+    						$scope.currentedit.oldval.mode = $scope.currentedit.newval.mode;
     						$scope.isSaveCompleted = true;
     						$scope.msgs.push($scope.currentedit.newval.name+'修改成功！');
     					}});
     		}else if($scope.mode == 'create'){
-    			queueClassService.createNewQueueClass($scope.currentedit.newval.name)
+    			queueClassService.createNewQueueClass($scope.currentedit.newval.name,
+    					$scope.currentedit.newval.mode)
     			.success(function(data){
     				if(data.status==0){
     					$scope.queueclasses.push(data.value);
@@ -38,14 +42,10 @@ define(['./module'],function(controllers,$){
     		if(mode == 'create'){
     			$scope.currentedit={newval:{},oldval:{}};
     		}
-    	}
-//    	$scope.showmsg = function(msg){
-//    		$scope.msgs.push(msg);
-//    		var timer = $timeout(function(){
-//    			$scope.msgs.pop();
-//    			$timeout.cancel(timer);
-//    		},2000);
-//    	};
+    	};
+    	$scope.translateQueueClassMode = function(mode){
+    		return (mode==0?'简单':(mode==1?'复杂':''));
+    	};
     	$scope.deletecur = function(){
     		var cur = $scope.currentedit.oldval;
     		$scope.IsHideModal = false;

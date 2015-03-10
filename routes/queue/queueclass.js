@@ -6,8 +6,9 @@ var ResData = require("../resdata.js");
 
 
 router.post('/create', function(req, res) {	
-	var name = req.body.classname;	
-	var queueclass = new QueueClass(name);
+	var name = req.body.classname;
+	var mode = req.body.classmode;
+	var queueclass = new QueueClass(null, name, mode);
 	queueclass.createNewQueueClass()
 		.then(function(status){
 			var resdata;		
@@ -22,8 +23,9 @@ router.post('/create', function(req, res) {
 
 router.post('/update', function(req, res) {	
 	var name = req.body.classname;	
-	var id = req.body.classid;	 
-	var queueclass = new QueueClass(name, id);
+	var id = req.body.classid;
+	var mode = req.body.classmode;
+	var queueclass = new QueueClass(id, name, mode);
 	queueclass.updateQueueClass()
 		.then(function(status){
 			var resdata;		
@@ -38,7 +40,7 @@ router.post('/update', function(req, res) {
 
 router.post('/delete', function(req, res) {	
 	var id = req.body.classid;	 
-	var queueclass = new QueueClass('', id);
+	var queueclass = new QueueClass(id);
 	queueclass.deleteQueueClass()
 		.then(function(status){
 			var resdata;		

@@ -13,6 +13,12 @@
 		<p ng-show="( dlgform.queueclassname.$invalid) || (dlgform.queueclassname.$invalid && !dlgform.queueclassname.$pristine)" class="help-block">队列类别必填。</p>
 		</div>
 	</div>
+	<div class="form-group" >
+		<label  for="queueclassmode" class="col-md-3 control-label">队列分类</label>
+		<div class="col-md-4 controls">
+			<input type="text" class="form-control" id="queueclassmode"  name="queueclassmode" ng-model="currentedit.newval.mode" required placeholder="请输入队列类别"/>
+		</div>
+	</div>
 </editdlg>
 </form>
 
@@ -25,6 +31,7 @@
 	<tr>
 		<th>队列分类ID</th>
 		<th>队列分类名称</th>
+		<th>模式</th>
     	<th></th>
     </tr>
     <tr ng-repeat="queueclass in queueclasses">
@@ -33,6 +40,9 @@
         </td>
     	<td>
     		{{queueclass.name}}
+        </td>
+        <td>
+    		{{queueclass.mode | translateMode:translateQueueClassMode}}
         </td>
         <td>
         	<edit ng-Model="queueclass"  edit-data="currentedit" ng-click="changeEditMode('edit')"><a data-target="#editmodal" data-toggle="modal"  href="javascript:void(0);">编辑</a></edit>
