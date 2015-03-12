@@ -7,11 +7,22 @@ define(['./module'],function(controllers,$){
     	$scope.mode = '';
     	$scope.currentedit={newval:{},oldval:{}};
     	$scope.isSaveCompleted = false;
+    	//dropdownlist for queue class mode
+    	$scope.ddlQueueClassMode = {
+    			menuItems:[{name:'简单', value:0},{name:'复杂', value:1}],
+    			showTopName:'name',
+    			showInMenuItemNames:['name'],
+    			selectedItem:null
+    	};
+    	$scope.$watch('currentedit.newval', function(){
+    		$scope.ddlQueueClassMode.selectedItem = $scope.ddlQueueClassMode.menuItems[$scope.currentedit.newval.mode || 0];
+    	});    	
     	queueClassService.getAllQueueClasses().success(function(data){
     		$scope.queueclasses = data.value;
     	});
     	$scope.saveChange = function(){
     		$scope.isSaveCompleted = false;
+    		$scope.currentedit.newval.mode = $scope.ddlQueueClassMode.selectedItem.value;
     		if ($scope.mode == 'edit'){
     			queueClassService.saveChangeQueueClass($scope.currentedit.newval.id,
     					$scope.currentedit.newval.name,
@@ -42,6 +53,7 @@ define(['./module'],function(controllers,$){
     		if(mode == 'create'){
     			$scope.currentedit={newval:{},oldval:{}};
     		}
+    		
     	};
     	$scope.translateQueueClassMode = function(mode){
     		return (mode==0?'简单':(mode==1?'复杂':''));

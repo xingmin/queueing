@@ -1,29 +1,33 @@
 define(['./module'],function(directives){
     'use strict';	
-    directives.directive("dropdownlabel",function($timeout){
+    directives.directive("dropdownlist",function($timeout){
 		  return{
 		    restrict:'E',
 		    scope:{
-		    	showColumns:'=showColumns',
-		    	fullfillColumn:'@fullfillColumn',
+		    	menuItems:'=menuItems',
+		    	showInMenuItemNames:'=showInMenuItemNames',
+		    	showTopName:'@showTopName',
 		    	selectedItem:'=selectedItem',
-		    	py:'=',
-		    	query:'&'
 		    },	    
-		    template: '<input type="text" class="form-control dropdown-toggle" data-toggle="dropdown" required ng-model="py" />'
-				+'<ul class="dropdown-menu" role="menu" style="margin-left:15px;">'
-				+'<li ng-repeat="item in menuItmes">'
-	 				+'<ul class="list-inline" ng-click="selectMenuItem($index)">'
-	 				+'<li ng-repeat="col in showColumns">'
-					+'<a href="javascript:void(0);" >{{item[col]}}</a>'
-	 				+'</li>'
-					+'</ul>' 
-				+'</li>'		   
-				+'</ul>',
+		    template:
+		    	'<div class="btn-group">'
+//		    	+'<button class="btn"></button>'
+		    	+'<button class="btn dropdown-toggle" data-toggle="dropdown">{{selectedItem[strShowTopName]}}<span class="caret"></span></button>'
+				+'<ul class="dropdown-menu" role="menu">'
+					+'<li ng-repeat="item in menuItems">'
+		 				+'<ul class="list-inline" ng-click="selectMenuItem($index)">'
+		 				+'<li ng-repeat="col in showInMenuItemNames">'
+						+'<a href="javascript:void(0);" >{{item[col]}}</a>'
+		 				+'</li>'
+						+'</ul>' 
+					+'</li>'		   
+				+'</ul>'
+				+'</div>',
 		    link:function(scope, element, attrs){
+		    	scope.strShowTopName=attrs['showTopName'];
 		    	scope.selectMenuItem = function(selectedIndex){
-		    		scope.selectedItem = scope.menuItmes[selectedIndex];
-		    		scope.py = scope.selectedItem[attrs.fullfillColumn];
+		    		scope.selectedItem = scope.menuItems[selectedIndex];
+//		    		scope.showTopValue = scope.selectedItem[attrs['showTopName']];
 		    	};
 		    }
 		  }

@@ -1,3 +1,3 @@
 define(['directives/eucd',
-//        'directives/dropdownlist'
+        'directives/dropdownlist'
         ],function(){});

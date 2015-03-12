@@ -7,6 +7,7 @@ define(['./module'],function(controllers){
     	$scope.personIdExternal=null;
     	$scope.queues=null;
     	$scope.selectedQueue = null;
+    	//根据当前的对列类别取得其包含的队列
     	$scope.getQueuesByCurrentClassId = function(){
 			if($scope.config.currentQueueClass){
 		    	queueService.getQueueInfoByClassId($scope.config.currentQueueClass.id).success(function(data){
@@ -16,12 +17,14 @@ define(['./module'],function(controllers){
 				});
 			}
     	};
+    	//选择的当前队列类别保存至本地
     	$scope.config={queueClasses:null,
     			currentQueueClass:null,
     			changeCurrent:function(queueclass){
     				$scope.config.currentQueueClass = queueclass;    			 
     				indexedDbService.setAppConfig('current-queue-class',{id:$scope.config.currentQueueClass.id,
-    																		name:$scope.config.currentQueueClass.name})
+    																	name:$scope.config.currentQueueClass.name,
+    																	mode:$scope.config.currentQueueClass.mode})
     					.then(
     							function(){
     								console.log('save configuration succeeded！')
@@ -29,8 +32,8 @@ define(['./module'],function(controllers){
     							},
     							function(){console.log('failed!')}
     						);    					 
-    				 
-    	}};
+    			}
+    	};
     	queueClassService.getAllQueueClasses().success(function(data){
     		$scope.config.queueClasses = data.value;
 			indexedDbService.getAppConfig('current-queue-class')
