@@ -63,7 +63,7 @@ router.get('/', function(req, res) {
 			}
 			resdata.sendJson(res);	
 		});
-});2
+});
 
 router.get('/get/py/:py', function(req, res) {	
 	var pinyin = req.param('py');
