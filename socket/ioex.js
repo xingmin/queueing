@@ -22,11 +22,12 @@ var ioex = function(io){
 			var queue = new Queue();
 			queue.init(queueId)
 				.then(function(queue){
-//					socket.emit('fetch-num-result',
-//							{status:0, seqId:personqueue.seqId, queueId:queueId, externalPersonId:externalPersonId});
 					return queue.enqueue(externalPersonId);
 				})
-				.then(null,function(err){
+				.then(function(){
+//					socket.emit('fetch-num-result',
+//					{status:0, seqId:personqueue.seqId, queueId:queueId, externalPersonId:externalPersonId});
+				},function(err){
 					socket.emit('fetch-num-result',
 							{status:1, seqId:personqueue.seqId, queueId:queueId, externalPersonId:externalPersonId});
 				});	 

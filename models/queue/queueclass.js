@@ -134,7 +134,7 @@ QueueClass.prototype.getQueueClassByQueueId = function(queueId){
 		var queueClass = null;
 		var record = data.recordset[0];
 		if(record && record.length>0){
-			queueClass = new QueueClass(record.Id, record.Name, record.Mode, record.Pinyin)
+			queueClass = new QueueClass(record[0].Id, record[0].Name, record[0].Mode, record[0].Pinyin)
 		};	
 		defered.resolve(queueClass);
 	},function(err){

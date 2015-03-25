@@ -29,12 +29,15 @@ PersonQueue.prototype.pushPersonEnqueue = function(queueId, personId){
 		request.input('PersonId', sql.Int, personId);	
 		return customdefer.request_defered(request, 'proc_enqueue');
 	}).then(function(data){
+		if(data.ret !== 0){
+			return defered.reject(new Error(data.recordset[0][0].errmsg));
+		}
 		var personQueue = null;
 		var record = data.recordset[0];
 		if( record && record.length>0){
-			personQueue = new PersonQueue({seqVersion:record.SeqVersion, 
-				seqId:record.SeqId, 
-				uniSeqId:record.UniSeqId});
+			personQueue = new PersonQueue({seqVersion:record[0].SeqVersion, 
+				seqId:record[0].SeqId, 
+				uniSeqId:record[0].UniSeqId});
 		};			
 		if (personQueue){
 			defered.resolve(personQueue);

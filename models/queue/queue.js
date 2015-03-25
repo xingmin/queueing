@@ -2,6 +2,7 @@ var sql = require('mssql');
 var customdefer = require('../customdefer');
 var Person = require('./person'); 
 var PersonQueue = require('./personqueue'); 
+var QueueClass = require('./queueclass'); 
 var Q = require('q');
 
 function Queue(id,name,maxCallTimes, queueClassId,queueClassName,isActive){
@@ -253,7 +254,7 @@ Queue.prototype.enqueue = function(personExternalId){
 					},function(err){
 						defered.reject(err);
 					});
-			}else if(mode == 0){
+			}else if(mode === 0){
 				PersonQueue.prototype.pushPersonEnqueue(that.id)
 					.then(function(pq){
 						defered.resolve(pq);
