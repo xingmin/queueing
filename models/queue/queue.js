@@ -1,6 +1,8 @@
 var sql = require('mssql'); 
 var customdefer = require('../customdefer');
-
+var Person = require('./person'); 
+var PersonQueue = require('./personqueue'); 
+var Q = require('q');
 
 function Queue(id,name,maxCallTimes, queueClassId,queueClassName,isActive){
     this.id = id;
@@ -10,6 +12,36 @@ function Queue(id,name,maxCallTimes, queueClassId,queueClassName,isActive){
     this.queueClassName = queueClassName; 
     this.isActive = isActive; 
 };
+
+Queue.prototype.init = function(queueId){
+	this.id = queueId;
+	var defered = Q.defer();
+	var config = require('../connconfig').queue;
+	
+	var conn = new sql.Connection(config);
+	var that = this;
+	
+	var promise = customdefer.conn_defered(conn).then(function(conn){
+		var request = new sql.Request(conn);
+		request.input('id', sql.Int, that.id);		
+		return customdefer.request_defered(request, 'proc_getQueueById');
+	}).then(function(data){
+		var record = data.recordset[0];
+		if( record && record.length>0){
+			that.id = record[0].QueueId;
+			that.name = record[0].QueueName;
+			that.maxCallTimes = record[0].MaxCallTimes;
+			that.queueClassId = record[0].QueueClassId; 
+			that.queueClassName = record[0].QueueClassName; 
+			that.isActive = record[0].IsActive; 
+		}	
+		defered.resolve(that);
+	},function(err){
+		defered.reject(err);
+	});
+	return defered.promise;
+};
+
 Queue.prototype.getAllQueues = function(){
 	var config = require('../connconfig').queue;
 	
@@ -185,7 +217,56 @@ Queue.getQueueByClassId = function(classid){
 	});
 	return promise;
 };
-
-
-
+Queue.prototype.getMode = function(queueid){
+	var queueId = queueid || this.id;
+	var defered = Q.defer();
+	QueueClass.prototype.getQueueClassByQueueId(queueId)
+		.then(function(queueClass){
+			if(!queueClass){
+				defered.reject(-1);
+			}else{
+				defered.resolve(queueClass.mode);
+			}
+		}
+		,function(err){
+			console.log('get queueclass by queue id failed.')
+			defered.reject(err);
+		});
+	return defered.promise;
+};
+Queue.prototype.enqueue = function(personExternalId){	
+	var that = this;
+	var defered = Q.defer();
+	this.getMode().then(
+		function(mode){
+			if(mode===1){
+				var person = new Person();
+				person.initByExternalPersonId(personExternalId)
+					.then(function(p){
+						PersonQueue.prototype.pushPersonEnqueue(p.personId, that.queueId)
+							.then(function(pq){
+								defered.resolve(pq);
+							}
+							,function(err){
+								defered.reject(err);
+							});
+					},function(err){
+						defered.reject(err);
+					});
+			}else if(mode == 0){
+				PersonQueue.prototype.pushPersonEnqueue(that.id)
+					.then(function(pq){
+						defered.resolve(pq);
+					}
+					,function(err){
+						defered.reject(err);
+					});
+			}else{
+				defered.reject(new Error('not defined mode code:'+mode));
+			}
+		},function(stat){
+			defered.reject(new Error('get queue mode failed'));
+		});
+	return defered.promise;
+};
 module.exports = Queue;

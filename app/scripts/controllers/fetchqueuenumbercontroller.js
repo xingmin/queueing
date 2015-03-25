@@ -7,6 +7,16 @@ define(['./module'],function(controllers){
     	$scope.personIdExternal=null;
     	$scope.queues=null;
     	$scope.selectedQueue = null;
+    	//对socket进行监听配置 
+    	(function(){
+    		socketService.on('fetch-num-result',function(result){
+    			if(result.status===0){
+    				console.log('fetch number succeeded.')
+    			}else{
+    				console.log('fetch number failed.');
+    			}
+    		})})();
+    	
     	//根据当前的对列类别取得其包含的队列
     	$scope.getQueuesByCurrentClassId = function(){
 			if($scope.config.currentQueueClass){
@@ -16,6 +26,17 @@ define(['./module'],function(controllers){
 					}
 				});
 			}
+    	};
+    	//根据选择的当前队列类别初始化页面数据
+    	$scope.initContext = function(){
+    		$scope.getQueuesByCurrentClassId();
+        	socketService.emit('join-room',
+        			'fetchnum:'+$scope.config.currentQueueClass.id,
+        			function(stat){ 
+        		if(stat.status==0){
+        			console.log('join-room-result:'+stat.message)
+        		}
+        	});
     	};
     	//选择的当前队列类别保存至本地
     	$scope.config={queueClasses:null,
@@ -28,12 +49,13 @@ define(['./module'],function(controllers){
     					.then(
     							function(){
     								console.log('save configuration succeeded！')
-    								$scope.getQueuesByCurrentClassId();
+    								$scope.initContext();
     							},
     							function(){console.log('failed!')}
     						);    					 
     			}
     	};
+    	//初始化页面的队列类别列表数据
     	queueClassService.getAllQueueClasses().success(function(data){
     		$scope.config.queueClasses = data.value;
 			indexedDbService.getAppConfig('current-queue-class')
@@ -44,7 +66,7 @@ define(['./module'],function(controllers){
 								$scope.config.currentQueueClass = val;
 							}
 						});
-						$scope.getQueuesByCurrentClassId();
+						$scope.initContext();
 					},
 					function(){console.log('failed!')}
 					);  
@@ -52,15 +74,13 @@ define(['./module'],function(controllers){
 
     	$scope.selectQueue = function(queue){
     		$scope.selectedQueue = queue;
-    	}      	
+    	};      	
     	$scope.fetchQueueNumber = function(queueid){
-    		
-    	}    	
-    	
-    	socketService.emit('myownevent','dd',function(){
-    		$scope.msgs.push('test')
-    	});
-
- 
+        	socketService.emit('fetch-num',{queueId:queueid, externalPersonId:''},function(stat){
+        		if(stat.status==0){
+        			console.log('join-room-result:'+stat.message)
+        		}
+        	});
+    	};  
     }]);
 })

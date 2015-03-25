@@ -1,6 +1,6 @@
 var sql = require('mssql'); 
 var customdefer = require('../customdefer');
-
+var Q = require('q');
 
 function QueueClass(id, name, mode, py){
     this.id = id;
@@ -106,7 +106,7 @@ QueueClass.prototype.deleteQueueClass = function(){
 	var conn = new sql.Connection(config);
 	var that = this;
 	
-	var promise =  customdefer.conn_defered(conn).then(function(conn){
+	var promise = customdefer.conn_defered(conn).then(function(conn){
 		var request = new sql.Request(conn);
 		request.input('id', sql.Int, that.id);		
 		return customdefer.request_defered(request, 'proc_deleteQueueClass');
@@ -125,25 +125,25 @@ QueueClass.prototype.getQueueClassByQueueId = function(queueId){
 	var config = require('../connconfig').queue;
 	
 	var conn = new sql.Connection(config);
-
-	var promise =  customdefer.conn_defered(conn).then(function(conn){
+	var defered = Q.defer();
+	customdefer.conn_defered(conn).then(function(conn){
 		var request = new sql.Request(conn);	
 		request.input('QueueId', sql.Int, queueId);	
 		return customdefer.request_defered(request, 'proc_getQueueClassByQueueId');
 	}).then(function(data){
-		var queueClass;
+		var queueClass = null;
 		var record = data.recordset[0];
-		if( record && record.length>0){
+		if(record && record.length>0){
 			queueClass = new QueueClass(record.Id, record.Name, record.Mode, record.Pinyin)
 		};	
-		return queueClass;
+		defered.resolve(queueClass);
 	},function(err){
 		if (err) {
 			console.log("executing proc_getQueueClassByQueueId Error: " + err.message);
-			return err;
+			defered.reject(err);
 		}
 	});
-	return promise;
+	return defered.promise;
 };
 
 

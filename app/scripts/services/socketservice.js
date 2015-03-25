@@ -16,7 +16,7 @@ define(['./module', 'socketio'],function(services,io){
 					var args = arguments;
 					$rootScope.$apply(function(){
 						if(callback){
-							callback.apply(socket.args);
+							callback.apply(socket, args);
 						}
 					});
 				})
