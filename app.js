@@ -12,6 +12,7 @@ var patient = require('./routes/patient');
 var depts = require('./routes/depts');
 var queueclass = require('./routes/queue/queueclass');
 var queue = require('./routes/queue/queue');
+var externalsys = require('./routes/queue/externalsys');
 
 var app = express();
 
@@ -36,6 +37,7 @@ app.use('/queue/queueclass', queueclass);
 app.use('/queue/queue', queue);
 app.use('/queue/window', require('./routes/queue/window'));
 app.use('/queue/user', require('./routes/queue/user'));
+app.use('/queue/externalsys', externalsys);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {

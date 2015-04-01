@@ -9,7 +9,7 @@ define(['./module'],function(controllers,$){
 	$scope.currentedit={newval:{},oldval:{}};
 	$scope.isSaveCompleted = false;
 	$scope.submitInvalid = false;
-	$scope.searchPinyin = { 
+	$scope.searchPinyin = {
 			"py":"",
 			"selectedItem" : {},
 			"showColumns":["id","name"],
@@ -17,6 +17,11 @@ define(['./module'],function(controllers,$){
 				return queueClassService.getQueueClassesByPinyin($scope.searchPinyin.py);
 			}
 	};
+	$scope.$watch('currentedit.newval', function(){
+		$timeout(function(){
+			$scope.searchPinyin.py = $scope.currentedit.newval.queueClassName || '';
+			},600);
+	});
 	queueService.getAllQueues().success(function(data){
 		$scope.queues = data.value;
 	});
@@ -27,14 +32,14 @@ define(['./module'],function(controllers,$){
 //		return;
 		if($scope.searchPinyin.py && $scope.searchPinyin.selectedItem.id){
 			$scope.currentedit.newval.queueClassId = $scope.searchPinyin.selectedItem.id;
-			$scope.currentedit.newval.queueClassName = $scope.searchPinyin.selectedItem.Name;
+			$scope.currentedit.newval.queueClassName = $scope.searchPinyin.selectedItem.name;
 		}
 		if(!$scope.currentedit.newval.queueClassId){
 			$scope.msgs.push('请选择队列类别');
 			return;
 		}
 		$scope.isSaveCompleted = false;
-		if ($scope.mode == 'edit'){
+		if ($scope.mode === 'edit'){
 			queueService.saveChangeQueue($scope.currentedit.newval.id,
 					$scope.currentedit.newval.name,
 					$scope.currentedit.newval.maxCallTimes,
@@ -46,7 +51,6 @@ define(['./module'],function(controllers,$){
 						$scope.currentedit.oldval.maxCallTimes = $scope.currentedit.newval.maxCallTimes;
 						$scope.currentedit.oldval.queueClassId = $scope.currentedit.newval.queueClassId;
 						$scope.currentedit.oldval.queueClassName = $scope.currentedit.newval.queueClassName;
-						$scope.searchPinyin.py = $scope.currentedit.newval.queueClassName;
 						$scope.currentedit.oldval.isActive = $scope.currentedit.newval.isActive;						
 						$scope.isSaveCompleted = true;
 						$scope.msgs.push($scope.currentedit.newval.name+'修改成功！');
@@ -70,10 +74,10 @@ define(['./module'],function(controllers,$){
 	//del --删除
 	$scope.changeEditMode = function(mode){
 		$scope.mode = mode;
-		if(mode == 'create'){
+		if(mode === 'create'){
 			$scope.currentedit={newval:{},oldval:{}};
 		}
-	}
+	};
 //	$scope.showmsg = function(msg){
 //		$scope.msgs.push(msg);
 //		var timer = $timeout(function(){

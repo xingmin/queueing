@@ -90,24 +90,24 @@ define(['./module'],function(directives){
 		  }
 	})
 	.directive("pyinput",function($timeout){
-		  return{
-		    restrict:'E',
-		    scope:{
-		    	showColumns:'=showColumns',
-		    	fullfillColumn:'@fullfillColumn',
-		    	selectedItem:'=selectedItem',
-		    	py:'=',
-		    	query:'&'
-		    },	    
-		    template: '<input type="text" class="form-control dropdown-toggle" data-toggle="dropdown" required ng-model="py" />'
+		return{
+			restrict:'E',
+			scope:{
+				showColumns:'=showColumns',
+				fullfillColumn:'@fullfillColumn',
+				selectedItem:'=selectedItem',
+				py:'=',
+				query:'&'
+			},
+			template: '<input type="text" class="form-control dropdown-toggle" data-toggle="dropdown" required ng-model="py" />'
 				+'<ul class="dropdown-menu" role="menu" style="margin-left:15px;">'
 				+'<li ng-repeat="item in menuItmes">'
-	 				+'<ul class="list-inline" ng-click="selectMenuItem($index)">'
+					+'<ul class="list-inline" ng-click="selectMenuItem($index)">'
 	 				+'<li ng-repeat="col in showColumns">'
 					+'<a href="javascript:void(0);" >{{item[col]}}</a>'
 	 				+'</li>'
-					+'</ul>' 
-				+'</li>'		   
+					+'</ul>'
+				+'</li>'
 				+'</ul>',
 		    link:function(scope, element, attrs){
 		    	var timeout;

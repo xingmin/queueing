@@ -3,4 +3,5 @@ define(['./queueservicex',
         './windowservice',
         './userservice',
         './socketservice',
-        './indexedDbService',],function(){});
+        './indexedDbService',
+        './externalSysService'],function(){});

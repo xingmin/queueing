@@ -10,7 +10,7 @@ router.post('/create', function(req, res) {
 	var maxCallTimes = req.body.maxCallTimes;	
 	var queueClassId = req.body.queueClassId;
 	var isActive = req.body.isActive;
-	var queue = new Queue(null,name, maxCallTimes,queueClassId, isActive);
+	var queue = new Queue(null,name, maxCallTimes,queueClassId, null, isActive);
 	queue.createNewQueue()
 		.then(function(status){
 			var resdata;		
@@ -29,7 +29,7 @@ router.post('/update', function(req, res) {
 	var maxCallTimes = req.body.maxCallTimes;	
 	var queueClassId = req.body.queueClassId;
 	var isActive = req.body.isActive;
-	var queue = new Queue(id, name, maxCallTimes, queueClassId, isActive);
+	var queue = new Queue(id, name, maxCallTimes, queueClassId, null, isActive);
 	queue.updateQueue()
 		.then(function(status){
 			var resdata;		

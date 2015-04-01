@@ -7,9 +7,37 @@ function Person(personId, externalPersonId, name){
     this.externalPersonId = externalPersonId;
     this.name = name;
     this._tryTimes = 1;
-};
+}
 Person.prototype.resetTryTimesCounter=function(){
 	this._tryTimes = 1;
+};
+Person.prototype.getPersonByExternalPersonId = function(externalPersonId){
+	var config = require('../connconfig').queue;
+	
+	var conn = new sql.Connection(config);
+	var that = this;
+
+	var defered = Q.defer();
+	customdefer.conn_defered(conn).then(function(conn){
+		var request = new sql.Request(conn);
+		request.input('ExternalPersonId', sql.VarChar(50), externalPersonId);
+		that._tryTimes--;
+		return customdefer.request_defered(request, 'proc_getPersonByExternalPersonId');
+	}).then(function(data){
+		var record = data.recordset[0];
+		if( record && record.length>0){
+			that.personId = record.PersonId;
+			that.externalPersonId = externalPersonId;
+			that.name = record.Name;
+		}
+		defered.resolve(that);
+	},function(err){
+		if (err) {
+			console.log("executing proc_getPersonByExternalPersonId Error: " + err.message);
+			defered.reject(err);
+		}
+	});
+	return defered.promise;
 };
 Person.prototype.initByExternalPersonId= function(externalPersonId){
 	var that = this;
@@ -23,7 +51,12 @@ Person.prototype.initByExternalPersonId= function(externalPersonId){
 			if(!person.personId){
 				that.loadExternalToInternal(externalPersonId)
 					.then(function(stat){
-						return that.getPersonByExternalPersonId(externalPersonId);
+						if(stat===0 ){
+							return that.getPersonByExternalPersonId(externalPersonId);
+						}else{
+							defered.reject(stat.errmsg);
+						}
+						
 					},function(err){
 						defered.reject(err);
 					});
@@ -35,58 +68,18 @@ Person.prototype.initByExternalPersonId= function(externalPersonId){
 		});
 	return defered.promise;
 };
-
-Person.prototype.loadExternalToInternal= function(externalPersonId){
-	var config = require('../connconfig').queueexternal;
-	
-	var conn = new sql.Connection(config);
+//从第三方的系统获取person的信息，导入本系统中
+//方式一：直接访问第三方数据库
+//proc_loadExternalToInternal
+//返回值0 成功
+//返回值非0 失败 errmsg失败的详细信息
+Person.prototype.loadExternalToInternal= function(externalPersonId, externalSysId){
 	var that = this;
-
-	var defered = Q.defer();
-	customdefer.conn_defered(conn).then(function(conn){
-		var request = new sql.Request(conn);	
-		request.input('ExternalPersonId', sql.VarChar(50), externalPersonId);	
-		that._tryTimes--;
-		return customdefer.request_defered(request, 'proc_getPersonByExternalPersonId');
-	}).then(function(stat){	
-		defered.resolve(stat);
-	},function(err){
-		if (err) {
-			console.log("executing  Error: " + err.message);
-			defered.reject(err);
-		}
-	});
-	return defered.promise;
-};
-
-
-Person.prototype.getPersonByExternalPersonId = function(externalPersonId){
-	var config = require('../connconfig').queue;
-	
-	var conn = new sql.Connection(config);
-	var that = this;
-
-	var defered = Q.defer();
-	customdefer.conn_defered(conn).then(function(conn){
-		var request = new sql.Request(conn);	
-		request.input('ExternalPersonId', sql.VarChar(50), externalPersonId);	
-		that._tryTimes--;
-		return customdefer.request_defered(request, 'proc_getPersonByExternalPersonId');
-	}).then(function(data){
-		var record = data.recordset[0];
-		if( record && record.length>0){
-			that.personId = record.PersonId;
-			that.externalPersonId = externalPersonId;
-			that.name = record.Name;
-		}		
-		defered.resolve(that);
-	},function(err){
-		if (err) {
-			console.log("executing proc_getPersonByExternalPersonId Error: " + err.message);
-			defered.reject(err);
-		}
-	});
-	return defered.promise;
+	that.getPersonInfoFromExternalSys(externalPersonId)
+		.then(function(data){
+			that.writeExternalPersonInfoToInternal();
+		});
 };
 
 module.exports = Person;
+

@@ -31,6 +31,10 @@ define(["./appx"],function(app){
 											templateUrl:'/views/tpl/queue.html',
 											controller: 'queue'
 										})
+										.when('/queuesys/externalsys',{
+											templateUrl:'/views/tpl/externalsys.html',
+											controller: 'externalSysController'
+										})
 										.when('/queuesys/queueclass',{
 											templateUrl:'/views/tpl/queueclass.html',
 											controller: 'queueclass'

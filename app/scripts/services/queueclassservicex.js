@@ -11,11 +11,18 @@ define(['./module'],function(services,$){
 			  delQueueClass:function(id){
 				  return $http.post('/queue/queueclass/delete/', {'classid':id});
 			  },
-			  createNewQueueClass:function(name, mode){
-				  return $http.post('/queue/queueclass/create/', {'classname':name, 'classmode':mode});
+			  createNewQueueClass:function(name, mode, py, externalSysId){
+				  return $http.post('/queue/queueclass/create/', {'classname':name,
+					  'classmode':mode,
+					  'pinyin':py,
+					  'externalSysId':externalSysId});
 			  },
-			  saveChangeQueueClass:function(id, name, mode){
-				  return $http.post('/queue/queueclass/update/', {'classname':name, 'classid':id, 'classmode':mode}); 
+			  saveChangeQueueClass:function(id, name, mode, py, externalSysId){
+				  return $http.post('/queue/queueclass/update/', {'classname':name,
+					  'classid':id,
+					  'classmode':mode,
+					  'pinyin':py,
+					  'externalSysId':externalSysId}); 
 			  }
 		  };
 	}])
