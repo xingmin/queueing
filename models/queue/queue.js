@@ -3,6 +3,7 @@ var customdefer = require('../customdefer');
 var Person = require('./person'); 
 var PersonQueue = require('./personqueue'); 
 var QueueClass = require('./queueclass'); 
+var ExternalSys = require('./externalsys'); 
 var Q = require('q');
 
 function Queue(id,name,maxCallTimes, queueClassId,queueClassName,isActive){
@@ -230,19 +231,52 @@ Queue.prototype.getMode = function(queueid){
 			}
 		}
 		,function(err){
-			console.log('get queueclass by queue id failed.')
+			console.log('get queueclass by queue id failed.');
 			defered.reject(err);
 		});
 	return defered.promise;
 };
-Queue.prototype.enqueue = function(personExternalId){	
+
+Queue.prototype.getExternalSys = function(queueid){
+	queueid = queueid || this.id;
+	var defered = Q.defer();
+	var config = require('../connconfig').queue;
+	var conn = new sql.Connection(config);
+	var promise = customdefer.conn_defered(conn).then(function(conn){
+		var request = new sql.Request(conn);
+		request.input('QueueId', sql.Int, queueid);
+		return customdefer.request_defered(request, 'proc_getExternalSysByQueueId');
+	}).then(function(data){
+		var record = data.recordset[0];
+		if(record && record.length>0){
+			var externalSys = new ExternalSys({
+				id:record[0].Id,
+				name:record[0].Name,
+				pinyin:record[0].Pinyin,
+				easyId:record[0].EasyId
+			});
+			return defered.resolve(externalSys);
+		}else{
+			return defered.reject(new Error('can not found external sys by queue id:'+queueid));
+		}
+	},function(err){
+		if (err) {
+			console.log("executing proc_getExternalSysByQueueId Error: " + err.message);
+		}
+		return defered.reject(err);
+	});
+	return defered.promise;
+};
+Queue.prototype.enqueue = function(personExternalId){
 	var that = this;
 	var defered = Q.defer();
-	this.getMode().then(
-		function(mode){
+	Q.all([that.getMode(), that.getExternalSys()])
+		.then(function(result){
+			var mode = result[0];
+			var externalSys = result[1];
 			if(mode===1){
 				var person = new Person();
-				person.initByExternalPersonId(personExternalId)
+				person.initByExternalPersonId(personExternalId, externalSys.id)
 					.then(function(p){
 						PersonQueue.prototype.pushPersonEnqueue(p.personId, that.queueId)
 							.then(function(pq){

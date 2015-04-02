@@ -4,7 +4,7 @@ define(['./module'],function(controllers){
     		['$scope','$http','$timeout','socketService','queueService','queueClassService','indexedDbService',
     		function($scope,$http,$timeout, socketService,queueService,queueClassService,indexedDbService){
     	$scope.msgs=[];
-    	$scope.personIdExternal=null;
+    	$scope.externalPersonId=null;
     	$scope.queues=null;
     	$scope.selectedQueue = null;
     	//对socket进行监听配置 
@@ -76,7 +76,7 @@ define(['./module'],function(controllers){
     		$scope.selectedQueue = queue;
     	};      	
     	$scope.fetchQueueNumber = function(queueid){
-        	socketService.emit('fetch-num',{queueId:queueid, externalPersonId:''},function(stat){
+        	socketService.emit('fetch-num',{queueId:queueid, externalPersonId:$scope.externalPersonId},function(stat){
         		if(stat.status==0){
         			console.log('join-room-result:'+stat.message)
         		}

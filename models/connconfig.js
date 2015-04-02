@@ -24,7 +24,7 @@ module.exports = {
 		user: 'sa',
 		password: 'system',
 		server: '127.0.0.1', // You can use 'localhost\\instance' to connect to named instance
-		database: 'test',
+		database: 'extsys',
 //		driver:'tds'
 	}
 }
