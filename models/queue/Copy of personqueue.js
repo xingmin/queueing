@@ -2,7 +2,7 @@ var sql = require('mssql');
 var customdefer = require('../customdefer');
 var Q = require('q');
 
-function PersonQueue(option){
+function Ticket(option){
     this.queueId = option.queueId || null;
     this.seqVersion = option.seqVersion || null;
     this.seqId = option.seqId || '';
@@ -15,18 +15,19 @@ function PersonQueue(option){
     this.callerId = option.callerId;
     this.personId = option.personId;
     this.uniSeqId =  option.uniSeqId;
-};
+}
 
-PersonQueue.prototype.pushPersonEnqueue = function(queueId, personId){
+//Ticket.prototype.pushPersonEnqueue = function(queueId, personId){
+Ticket.create = function(queueId, personId){
 	var config = require('../connconfig').queue;
 	
 	var conn = new sql.Connection(config);
 
 	var defered = Q.defer();
 	customdefer.conn_defered(conn).then(function(conn){
-		var request = new sql.Request(conn);	
-		request.input('QueueId', sql.Int, queueId);	
-		request.input('PersonId', sql.Int, personId);	
+		var request = new sql.Request(conn);
+		request.input('QueueId', sql.Int, queueId);
+		request.input('PersonId', sql.Int, personId);
 		return customdefer.request_defered(request, 'proc_enqueue');
 	}).then(function(data){
 		if(data.ret !== 0){
@@ -35,10 +36,10 @@ PersonQueue.prototype.pushPersonEnqueue = function(queueId, personId){
 		var personQueue = null;
 		var record = data.recordset[0];
 		if( record && record.length>0){
-			personQueue = new PersonQueue({seqVersion:record[0].SeqVersion, 
-				seqId:record[0].SeqId, 
+			personQueue = new PersonQueue({seqVersion:record[0].SeqVersion,
+				seqId:record[0].SeqId,
 				uniSeqId:record[0].UniSeqId});
-		};			
+		};
 		if (personQueue){
 			defered.resolve(personQueue);
 		}else{

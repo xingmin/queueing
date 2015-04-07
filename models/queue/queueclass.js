@@ -12,7 +12,7 @@ function QueueClass(id, name, mode, py, externalSysId, externalSysName){
 }
 QueueClass.prototype.getAllQueueClass = function(){
 	var defered = Q.defer();
-	var config = require('../connconfig').queue;	
+	var config = require('../connconfig').queue;
 	var conn = new sql.Connection(config);
 	var promise =  customdefer.conn_defered(conn).then(function(conn){
 		var request = new sql.Request(conn);
@@ -20,8 +20,8 @@ QueueClass.prototype.getAllQueueClass = function(){
 	}).then(function(data){
 		var arrQueueClass = [];
 		data.recordset[0].forEach(function(value){
-			arrQueueClass.push((new QueueClass(value.Id, 
-					value.Name, 
+			arrQueueClass.push((new QueueClass(value.Id,
+					value.Name,
 					value.Mode,
 					value.Pinyin,
 					value.ExternalSysId,
@@ -120,7 +120,7 @@ QueueClass.prototype.updateQueueClass = function(){
 		if (err) {
 			console.log("executing proc_updateQueueClass Error: " + err.message);
 		}
-		defered.reject(err)
+		defered.reject(err);
 	});
 	return defered.promise;
 };
@@ -134,7 +134,7 @@ QueueClass.prototype.deleteQueueClass = function(){
 	
 	var promise = customdefer.conn_defered(conn).then(function(conn){
 		var request = new sql.Request(conn);
-		request.input('id', sql.Int, that.id);		
+		request.input('id', sql.Int, that.id);
 		return customdefer.request_defered(request, 'proc_deleteQueueClass');
 	}).then(function(data){
 		if(data.ret === 0){
@@ -157,8 +157,8 @@ QueueClass.prototype.getQueueClassByQueueId = function(queueId){
 	var conn = new sql.Connection(config);
 	var defered = Q.defer();
 	customdefer.conn_defered(conn).then(function(conn){
-		var request = new sql.Request(conn);	
-		request.input('QueueId', sql.Int, queueId);	
+		var request = new sql.Request(conn);
+		request.input('QueueId', sql.Int, queueId);
 		return customdefer.request_defered(request, 'proc_getQueueClassByQueueId');
 	}).then(function(data){
 		var queueClass = null;
@@ -169,8 +169,8 @@ QueueClass.prototype.getQueueClassByQueueId = function(queueId){
 					record[0].Mode,
 					record[0].Pinyin,
 					record[0].ExternalSysId,
-					record[0].ExternalSysName)
-		};	
+					record[0].ExternalSysName);
+		};
 		defered.resolve(queueClass);
 	},function(err){
 		if (err) {

@@ -2,19 +2,13 @@
 <div class="container col-md-5 col-md-offset-3">
 	<div class="title">	
 		<h3>配置当前类别</h3>
-	</div>
-	<div class="input-group">
-		<input type="text"  class="form-control" value="{{config.currentQueueClass.name}}">		 
-		<div class="input-group-btn">
-			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-			类别
-			</button>
-			<ul class="dropdown-menu pull-right">
-				<li ng-repeat="queueclass in config.queueClasses">
-					<a ng-click="config.changeCurrent(queueclass)">{{queueclass.name}}</a>
-				</li>
-			</ul>
-		</div>
+	</div>	
+	<div class="list-group">
+		<a ng-repeat="queueclass in config.queueClasses" 
+			class="list-group-item" 
+			ng-class="{true:'active',false:''}[queueclass.isSelected]"
+			ng-click="config.toggleSelectQueueClass(queueclass)">{{queueclass.name}}
+		</a>
 	</div>
 	<button type="button" data-toggle="modal" class="btn btn-primary " data-target="#mymodal" >全屏</button>
 </div>
@@ -27,16 +21,17 @@
 			<div class="modal-body"> 
 				<div class="col-md-6 col-md-offset-3">
 					<div class="panel panel-default ">
+						<div><msgbox messages="msgs"></msgbox> 	</div>
 						<div class="panel-heading">
 							<h3>当前活动队列<input type="text" class="form-control" ng-hide="config.currentQueueClass.mode==0" ng-model="externalPersonId" placeholder="请您刷卡取号"/></h3>
 						</div>
-						<table class="table table-bordered table-hover">
+						<table ng-repeat="queueclass in getSelectedQueueClasses()" class="table table-bordered table-hover">
 							<tr>
 								<th>队列ID</th>
 								<th>队列名称</th>
 								<th></th>
-						    </tr>
-						    <tr ng-repeat="queue in queues">
+						    </tr>						    
+						    <tr ng-repeat="queue in queueclass.queues">
 						        <td>
 						    		{{queue.id}}
 						        </td>
@@ -48,12 +43,13 @@
 						        </td>
 							</tr>
 						</table>
+						
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="modal-footer">	
-		<msgbox messages="msgs"></msgbox> 	
+		
 		</div>
 	</div>
 </div>

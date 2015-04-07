@@ -18,12 +18,12 @@ var ExternalSysAPIs =
 				return customdefer.request_defered(request, 'proc_queryExternalPersonInfo');
 			}).then(function(data){
 				var record = data.recordset[0];
-				if(record && record[0].length>0){
+				if(record && record.length>0){
 					//这里自己定义personInfo的结构，方便在这两个函数之间传递数据
 					//这个地方有问题?????/
 					defered.resolve({
 						 "externalPersonId":externalPersonId,
-						 "name":record.name
+						 "name":record[0].name
 						});
 				}else{
 					return defered.reject(new Error('can not find person form external system. id:'+externalPersonId));
@@ -49,11 +49,11 @@ var ExternalSysAPIs =
 				request.input('ExternalSysId', sql.Int, extSysId);
 				request.input('ExternalSysEasyId', sql.VarChar(50), '');
 				return customdefer.request_defered(request, 'proc_addPerson');
-			}).then(function(recordset){
-				if(recordset.ret !== 0 ){
+			}).then(function(data){
+				if(data.ret !== 0 ){
 					return defered.reject(new Error(recordset[0][0].errmsg));
 				}
-				defered.resolve(recordset[0][0].PersonId);
+				defered.resolve(data.recordset[0][0].PersonId);
 			},function(err){
 				console.log("executing  Error: " + err.message);
 				defered.reject(err);

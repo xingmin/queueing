@@ -5,31 +5,32 @@ var Q = require('q');
 
 var ioex = function(io){
 	io.on('connection',function(socket){
-		console.log('a user connect')
+		console.log('a user connect');
 		socket.emit('news', {hello:'world'});
-		socket.on('join-room', function(room, fn){
+		socket.on('join-room', function(rooms, fn){
 			socket.rooms.forEach(function(val){
 				console.log('leaveing:'+val);
 				socket.leave(val);
 			});
-			socket.join(room);
-			fn({status:0, message:'joined room-'+room});
+			for(var room in rooms){
+				socket.join(room);
+			}
+			fn({status:0, message:'joined room-'+rooms});
 		});
 		//叫号
-		socket.on('fetch-num', function(data, fn){			
+		socket.on('fetch-num', function(data, fn){	
 			var queueId = data.queueId;
-			var externalPersonId = data.externalPersonId;
+			var externalPersonId = data.externalPersonId || '';
 			var queue = new Queue();
 			queue.init(queueId)
 				.then(function(queue){
 					return queue.enqueue(externalPersonId);
 				})
-				.then(function(){
-//					socket.emit('fetch-num-result',
-//					{status:0, seqId:personqueue.seqId, queueId:queueId, externalPersonId:externalPersonId});
+				.then(function(pq){
+					socket.emit('fetch-num-result', {code:0,message:'', data:pq});
 				},function(err){
 					socket.emit('fetch-num-result',
-							{status:1, seqId:personqueue.seqId, queueId:queueId, externalPersonId:externalPersonId});
+							{code:1, message:'取号失败，原因：'+err.message, data:null});
 				});	 
 			 
 		});

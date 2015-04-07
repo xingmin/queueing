@@ -87,7 +87,7 @@ Person.prototype.loadExternalToInternal= function(externalPersonId, externalSysI
 					return extapi.writeExternalPersonInfoToInternal(personinfo, externalSysId);
 				})
 				.then(function(stat){
-					return defered.resolve(0);
+					defered.resolve(0);
 				},function(err){
 					defered.reject(err);
 				});

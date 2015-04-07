@@ -1,7 +1,7 @@
 var sql = require('mssql'); 
 var customdefer = require('../customdefer');
 var Person = require('./person'); 
-var PersonQueue = require('./personqueue'); 
+var Ticket = require('./ticket'); 
 var QueueClass = require('./queueclass'); 
 var ExternalSys = require('./externalsys'); 
 var Q = require('q');
@@ -278,9 +278,9 @@ Queue.prototype.enqueue = function(personExternalId){
 				var person = new Person();
 				person.initByExternalPersonId(personExternalId, externalSys.id)
 					.then(function(p){
-						PersonQueue.prototype.pushPersonEnqueue(p.personId, that.queueId)
-							.then(function(pq){
-								defered.resolve(pq);
+						Ticket.create(that, p)
+							.then(function(ticket){
+								defered.resolve(ticket);
 							}
 							,function(err){
 								defered.reject(err);
@@ -289,9 +289,9 @@ Queue.prototype.enqueue = function(personExternalId){
 						defered.reject(err);
 					});
 			}else if(mode === 0){
-				PersonQueue.prototype.pushPersonEnqueue(that.id)
-					.then(function(pq){
-						defered.resolve(pq);
+				Ticket.create(that)
+					.then(function(ticket){
+						defered.resolve(ticket);
 					}
 					,function(err){
 						defered.reject(err);
