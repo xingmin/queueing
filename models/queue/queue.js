@@ -142,6 +142,34 @@ Queue.prototype.deleteQueue = function(){
 	});
 	return promise;
 };
+Queue.getUserAvilableQueueDetail = function(userid){
+	var config = require('../connconfig').queue;
+	var defered = Q.defer();
+	var conn = new sql.Connection(config);
+
+	var promise = customdefer.conn_defered(conn).then(function(conn){
+		var request = new sql.Request(conn);	
+		request.input('userid', sql.Int, userid);	
+		return customdefer.request_defered(request, 'proc_getUserAvilableQueueDetail');
+	}).then(function(data){
+		var arrQueue = [];
+		data.recordset[0].forEach(function(value){
+			arrQueue.push(new Queue(value.QueueId,
+					value.QueueName,
+					value.MaxCallTimes,
+					value.QueueClassId,
+					value.QueueClassName,
+					value.IsActive));
+		});
+		return defered.resolve( arrQueue );
+	},function(err){
+		if (err) {
+			console.log("executing proc_getUserAvilableQueue Error: " + err.message);
+		}
+		defered.reject(err);
+	});
+	return defered.promise;
+};
 
 Queue.getUserAvilableQueue = function(userid){
 	var config = require('../connconfig').queue;

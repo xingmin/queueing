@@ -7,4 +7,5 @@ define(['controllers/queuecontrollerx',
         'controllers/choosewindowcontroller',
         'controllers/userlogincontroller',
         'controllers/fetchqueuenumbercontroller',
-        'controllers/externalsyscontroller'],function(){});
+        'controllers/externalsyscontroller',
+        './callpersoncontroller'],function(){});

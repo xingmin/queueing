@@ -67,6 +67,10 @@ define(["./appx"],function(app){
 											templateUrl:'/views/tpl/fetchqueuenumber.html',
 											controller: 'fetchQueueNumberController'
 										})
+										.when('/queuesys/queue/callperson',{
+											templateUrl:'/views/tpl/callperson.html',
+											controller: 'callPersonController'
+										})
 										.otherwise({
 											redirectTo:'/'
 										});

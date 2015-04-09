@@ -3,7 +3,7 @@ define(['require',
         'jquery',
         'bootstrap',
         'angular-route',
-        'angular-bootstrap',  
+        'angular-bootstrap',
       //  'modal-carousel',
         'appx',
         'router'

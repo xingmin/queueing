@@ -7,18 +7,18 @@ var ioex = function(io){
 	io.on('connection',function(socket){
 		console.log('a user connect');
 		socket.emit('news', {hello:'world'});
-		socket.on('join-room', function(rooms, fn){
+		socket.on('join-room', function(roominfo, fn){
 			socket.rooms.forEach(function(val){
 				console.log('leaveing:'+val);
 				socket.leave(val);
 			});
-			for(var room in rooms){
-				socket.join(room);
+			for(var room in roominfo.data){
+				socket.join(roominfo.roomtype+':'+room);
 			}
-			fn({status:0, message:'joined room-'+rooms});
+			fn({code:0, message:'join room:'+socket.rooms});
 		});
 		//叫号
-		socket.on('fetch-num', function(data, fn){	
+		socket.on('fetch-ticket', function(data, fn){
 			var queueId = data.queueId;
 			var externalPersonId = data.externalPersonId || '';
 			var queue = new Queue();
@@ -27,15 +27,15 @@ var ioex = function(io){
 					return queue.enqueue(externalPersonId);
 				})
 				.then(function(pq){
-					socket.emit('fetch-num-result', {code:0,message:'', data:pq});
+					socket.emit('fetch-ticket-result', {code:0,message:'', data:pq});
 				},function(err){
-					socket.emit('fetch-num-result',
+					socket.emit('fetch-ticket-result',
 							{code:1, message:'取号失败，原因：'+err.message, data:null});
-				});	 
+				});	
 			 
 		});
 		socket.on('disconnect', function(){
-			console.log('user disconnecte.');
+			console.log('user disconnected.');
 		});
 	});	
 };
