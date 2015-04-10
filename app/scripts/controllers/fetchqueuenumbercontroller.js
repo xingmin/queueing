@@ -10,7 +10,7 @@ define(['./module'],function(controllers){
 			socketService.on('fetch-ticket-result',function(result){
 				if(result.code === 0){
 					console.log('fetch ticket succeeded.');
-					$scope.msgs.push('fetch number succeeded.'+result.data.seqId);		
+					$scope.msgs.push('fetch number succeeded.'+result.data.seqId);
 				}else{
 					console.log('fetch ticket failed.');
 				}

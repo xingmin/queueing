@@ -6,4 +6,5 @@ define(['./queueservicex',
         './indexedDbService',
         './externalSysService',
         './ticketService',
-        './dictService'],function(){});
+        './dictService',
+        './personService'],function(){});

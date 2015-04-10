@@ -30,8 +30,9 @@ Ticket.getQueuingTicketByQueueId = function(queueId){
 		return customdefer.request_defered(request, 'proc_getQueuingPersonByQueueId');
 	}).then(function(data){
 		var record = data.recordset[0];
+		var tickets = [];
 		if( record && record.length>0){
-			var tickets = [];
+			
 			record.forEach(function(row){
 				var ticket = new Ticket({
 					'queueId' : row.QueueId,
@@ -49,10 +50,9 @@ Ticket.getQueuingTicketByQueueId = function(queueId){
 				});
 				tickets.push(ticket);
 			});
-			defered.resolve(tickets);
-		}else{
-			defered.reject(new Error('enqueue failed.'));
+			
 		}
+		defered.resolve(tickets);
 	},function(err){
 		console.log("executing proc_getQueuingPersonByQueueId Error: " + err.message);
 		defered.reject(err);

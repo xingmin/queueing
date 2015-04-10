@@ -5,17 +5,7 @@
 <msgbox messages="msgs"></msgbox>
 
 <div class="row-fluid">
-	<div class="col-md-2">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h3>操作区</h3>
-			</div>
-			<div>
-				<button class="btn-primary ">叫号</button>
-			</div>
-		</div>
-	</div>
-	<div class="col-md-2" ng-repeat="queue in queues">
+	<div class="col-md-3" ng-repeat="queue in queues">
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h3>队列{{$index}}</h3>
@@ -31,13 +21,23 @@
 			    		{{ticket.seqId}}
 			        </td>
 			        <td>
-			    		{{ticket.personId}}
+			    		{{ticket.person.name}}
 			        </td>
 			        <td>
 			    		{{ticket.status |dictQueueStatusMap:dictQueueStatus}}
 			        </td>
 				</tr>
 			</table>
+		</div>
+	</div>	
+	<div class="col-md-2">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3>操作区</h3>
+			</div>
+			<div>
+				<button class="btn btn-primary btn-large">叫号</button>
+			</div>
 		</div>
 	</div>
  </div>

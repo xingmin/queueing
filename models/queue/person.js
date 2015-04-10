@@ -12,6 +12,53 @@ function Person(personId, externalPersonId, name){
 Person.prototype.resetTryTimesCounter=function(){
 	this._tryTimes = 2;
 };
+Person.prototype.initByPersonId = function(personId){
+	var config = require('../connconfig').queue;
+	var conn = new sql.Connection(config);
+	var that = this;
+
+	var defered = Q.defer();
+	customdefer.conn_defered(conn).then(function(conn){
+		var request = new sql.Request(conn);
+		request.input('PersonId', sql.Int, personId);
+		return customdefer.request_defered(request, 'proc_getPersonByPersonId');
+	}).then(function(data){
+		var record = data.recordset[0];
+		if( record && record.length>0){
+			that.personId = record[0].PersonId;
+			that.externalPersonId = record[0].ExternalPersonId;
+			that.name = record[0].Name;
+			defered.resolve(that);
+		}else{
+			defered.reject(new Error('can not find person by person id:'+personId));
+		}
+	},function(err){
+		if (err) {
+			console.log("executing proc_getPersonByPersonId Error: " + err.message);
+		}
+		defered.reject(err);
+	});
+	return defered.promise;
+};
+Person.prototype.initByExternalPersonId= function(externalPersonId, externalSysId, defered){
+	var that = this;
+	that._tryTimes--;
+	defered = defered || Q.defer();
+	if(this._tryTimes < 0){
+		defered.reject(new Error('failed to load person in the try times.'));
+		return defered.promise;
+	}
+	that.getPersonByExternalPersonId(externalPersonId)
+		.then(function(person){
+			defered.resolve(person);
+		},function(err){
+			that.loadExternalToInternal(externalPersonId, externalSysId)
+				.then(function(stat){
+					that.initByExternalPersonId(externalPersonId, externalSysId, defered);
+				});
+		});
+	return defered.promise;
+};
 Person.prototype.getPersonByExternalPersonId = function(externalPersonId){
 	var config = require('../connconfig').queue;
 	
@@ -39,25 +86,6 @@ Person.prototype.getPersonByExternalPersonId = function(externalPersonId){
 		}
 		defered.reject(err);
 	});
-	return defered.promise;
-};
-Person.prototype.initByExternalPersonId= function(externalPersonId, externalSysId, defered){
-	var that = this;
-	that._tryTimes--;
-	defered = defered || Q.defer();
-	if(this._tryTimes < 0){
-		defered.reject(new Error('failed to load person in the try times.'));
-		return defered.promise;
-	}
-	that.getPersonByExternalPersonId(externalPersonId)
-		.then(function(person){
-			defered.resolve(person);
-		},function(err){
-			that.loadExternalToInternal(externalPersonId, externalSysId)
-				.then(function(stat){
-					that.initByExternalPersonId(externalPersonId, externalSysId, defered);
-				});
-		});
 	return defered.promise;
 };
 //从第三方的系统获取person的信息，导入本系统中

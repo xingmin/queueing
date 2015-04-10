@@ -1,12 +1,13 @@
 var express = require('express');
 var router = express.Router();
-var Ticket = require("../../models/queue/ticket.js");
+var Person = require("../../models/queue/person.js");
 var Q = require('q');
 var ResData = require("../resdata.js");
 
-router.get('/queuing/queueid/:queueid', function(req, res) {
-	var queueid = req.param('queueid');
-	Ticket.getQueuingTicketByQueueId(queueid)
+router.get('/:personid', function(req, res) {
+	var personId = req.param('personid');
+	var person = new Person();
+	person.initByPersonId(personId)
 		.then(
 				function(data){
 					var resdata;

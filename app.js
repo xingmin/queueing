@@ -15,6 +15,7 @@ var queue = require('./routes/queue/queue');
 var externalsys = require('./routes/queue/externalsys');
 var ticket = require('./routes/queue/ticket');
 var dict = require('./routes/queue/dict');
+var person = require('./routes/queue/person');
 
 var app = express();
 
@@ -42,6 +43,7 @@ app.use('/queue/user', require('./routes/queue/user'));
 app.use('/queue/externalsys', externalsys);
 app.use('/queue/ticket', ticket);
 app.use('/dict', dict);
+app.use('/queue/person', person);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
